@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:22-slim
 
 # Install Chromium + FFmpeg + fonts for CJK support
 RUN apt-get update && apt-get install -y \
@@ -18,14 +18,12 @@ WORKDIR /app
 # Copy package files
 COPY package.json ./
 
-# Install dependencies (skip Puppeteer's own Chromium download)
-RUN PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true npm install
+# Install dependencies
+RUN npm install
 
 # Copy app
 COPY server.js ./
 
-# Expose port
 EXPOSE 3000
 
-# Start
 CMD ["node", "server.js"]
