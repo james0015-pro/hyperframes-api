@@ -1,6 +1,6 @@
 import express from 'express';
 import { execSync } from 'child_process';
-import { writeFileSync, existsSync, readFileSync, mkdirSync, rmSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync, mkdirSync, rmSync, readdirSync } from 'fs';
 import { randomUUID } from 'crypto';
 import { join } from 'path';
 import { tmpdir } from 'os';
@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
   res.json({ ok: true, service: 'hyperframes-api', version: '2.0.0' });
 });
 
-app.post('/render', async (req, res) => {
+app.post('/render', (req, res) => {
   const { html } = req.body;
   
   if (!html) {
@@ -63,8 +63,7 @@ app.post('/render', async (req, res) => {
     if (!existsSync(mp4Path)) {
       // Try listing out directory
       if (existsSync(outDir)) {
-        const fs = await import('fs');
-        const files = fs.readdirSync(outDir);
+        const files = readdirSync(outDir);
         console.log(`[${jobId}] out/ contents: ${files.join(', ')}`);
       }
       throw new Error(`MP4 not found at ${mp4Path}`);
